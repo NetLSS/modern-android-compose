@@ -26,13 +26,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             Box(
                 modifier = Modifier.background(color = Color.Green)
-                    .fillMaxSize(),
+                    .fillMaxWidth()
+                    .height(200.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text("Hello")
                 Box(
                     modifier = Modifier.fillMaxSize()
-                       //.background(color = Color.Red)
+                        //.background(color = Color.Red)
                         .padding(16.dp),
                     contentAlignment = Alignment.BottomEnd
                 ) {
