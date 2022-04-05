@@ -17,6 +17,8 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,7 +43,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ImageCard() {
-    val isFavorite = remember {
+    var isFavorite by remember {
         mutableStateOf(false)
     }
 
@@ -64,10 +66,10 @@ fun ImageCard() {
                 contentAlignment = Alignment.TopEnd
             ) {
                 IconButton(onClick = {
-                    isFavorite.value = !isFavorite.value
+                    isFavorite = !isFavorite
                 }) {
                     Icon(
-                        imageVector = if (isFavorite.value) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                         contentDescription = "favorite",
                         tint = Color.White,
                     )
