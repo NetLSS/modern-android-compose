@@ -27,22 +27,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            LazyColumn(
-                modifier = Modifier.background(color = Color.Green)
-                    .fillMaxWidth(),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                item {
-                    Text("Header")
-                }
-                items(50) { index ->
-                    Text("글씨 $index")
-                }
-                item {
-                    Text("Footer")
-                }
-            }
+
         }
     }
 }
