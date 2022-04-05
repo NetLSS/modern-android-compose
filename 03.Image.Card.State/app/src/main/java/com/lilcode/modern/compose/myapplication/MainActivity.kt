@@ -29,7 +29,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             LazyColumn(
                 modifier = Modifier.background(color = Color.Green)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(50) { index ->
                     Text("글씨 $index")
