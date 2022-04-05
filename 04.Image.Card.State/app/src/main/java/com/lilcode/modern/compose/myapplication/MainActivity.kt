@@ -37,17 +37,21 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ImageCard()
+            var isFavorite by rememberSaveable {
+                mutableStateOf(false)
+            }
+            ImageCard(isFavorite) { favorite ->
+                isFavorite = favorite
+            }
         }
     }
 }
 
 @Composable
-fun ImageCard() {
-    var isFavorite by rememberSaveable {
-        mutableStateOf(false)
-    }
-
+fun ImageCard(
+    isFavorite: Boolean,
+    onTabFavorite: (Boolean) -> Unit
+) {
     Card(
         modifier = Modifier.fillMaxWidth(0.5f)
             .padding(16.dp),
@@ -67,7 +71,7 @@ fun ImageCard() {
                 contentAlignment = Alignment.TopEnd
             ) {
                 IconButton(onClick = {
-                    isFavorite = !isFavorite
+                    onTabFavorite.invoke(!isFavorite)
                 }) {
                     Icon(
                         imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
