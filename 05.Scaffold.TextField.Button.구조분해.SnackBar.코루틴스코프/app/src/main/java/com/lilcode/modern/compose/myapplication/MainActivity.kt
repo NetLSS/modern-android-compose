@@ -25,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lilcode.modern.compose.myapplication.ui.theme.MyApplicationTheme
+import kotlinx.coroutines.launch
 
 /**
  * https://www.inflearn.com/course/%EB%AA%A8%EB%8D%98-%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%EC%BB%B4%ED%8F%AC%EC%A6%88/lecture/94903?tab=note&volume=1.00&quality=1080
@@ -37,7 +38,12 @@ class MainActivity : ComponentActivity() {
                 mutableStateOf("")
             }
 
-            Scaffold {
+            val scaffoldState = rememberScaffoldState() // 최근 상태 저장
+            val scope = rememberCoroutineScope()
+
+            Scaffold(
+                scaffoldState = scaffoldState
+            ) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
@@ -49,7 +55,11 @@ class MainActivity : ComponentActivity() {
                         onValueChange = setValue
                     )
 
-                    Button(onClick = {}) {
+                    Button(onClick = {
+                        scope.launch {
+                            scaffoldState.snackbarHostState.showSnackbar(message = "Hello $text")
+                        }
+                    }) {
                         Text(text = "클릭!!")
                     }
                 }
