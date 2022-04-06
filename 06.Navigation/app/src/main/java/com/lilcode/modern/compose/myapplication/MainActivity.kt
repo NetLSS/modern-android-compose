@@ -50,8 +50,12 @@ class MainActivity : ComponentActivity() {
                 composable(route = "second") {
                     SecondScreen(navController = navController)
                 }
-                composable(route = "third") {
-                    ThirdScreen(navController = navController, value = "")
+                composable(route = "third/{value}") { backStackEntry ->
+
+                    ThirdScreen(
+                        navController = navController,
+                        value = backStackEntry.arguments?.getString("value") ?: ""
+                    )
                 }
             }
         }
@@ -83,7 +87,7 @@ fun FirstScreen(navController: NavController) {
             if (value.isEmpty()) {
                 return@Button
             }
-            navController.navigate(route = "third")
+            navController.navigate(route = "third/$value")
         }) {
             Text(text = "세 번째!")
         }
