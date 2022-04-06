@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -44,21 +45,23 @@ class MainActivity : ComponentActivity() {
 
             NavHost(navController = navController, startDestination = "first") {
                 composable(route = "first") {
-                    FirstScreen()
+                    FirstScreen(navController = navController)
                 }
                 composable(route = "second") {
-                    SecondScreen()
+                    SecondScreen(navController = navController)
                 }
                 composable(route = "third") {
-                    ThirdScreen("")
+                    ThirdScreen(navController = navController, value = "")
                 }
             }
         }
     }
 }
 
+// 각 화면에서 callback 을 줘서 하는 방법 도 있음 이건 TODO 해보기
+
 @Composable
-fun FirstScreen() {
+fun FirstScreen(navController: NavController) {
     val (value, setValue) = remember {
         mutableStateOf(value = "")
     }
@@ -69,19 +72,26 @@ fun FirstScreen() {
     ) {
         Text(text = "첫 화면")
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = {}) {
+        Button(onClick = {
+            navController.navigate(route = "second")
+        }) {
             Text(text = "두 번째!")
         }
         Spacer(modifier = Modifier.height(16.dp))
         TextField(value = value, onValueChange = setValue)
-        Button(onClick = {}) {
+        Button(onClick = {
+            if (value.isEmpty()) {
+                return@Button
+            }
+            navController.navigate(route = "third")
+        }) {
             Text(text = "세 번째!")
         }
     }
 }
 
 @Composable
-fun SecondScreen() {
+fun SecondScreen(navController: NavController) {
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -90,14 +100,18 @@ fun SecondScreen() {
     ) {
         Text(text = "두 번째 화면")
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = {}) {
+        Button(onClick = {
+            navController.navigateUp()
+//            navController.popBackStack()
+//            navController.navigate(route = "first")
+        }) {
             Text(text = "뒤로 가기")
         }
     }
 }
 
 @Composable
-fun ThirdScreen(value: String) {
+fun ThirdScreen(navController: NavController, value: String) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -106,7 +120,10 @@ fun ThirdScreen(value: String) {
         Text(text = "세 번째 화면")
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = value)
-        Button(onClick = {}) {
+        Button(onClick = {
+            navController.popBackStack()
+//            navController.navigate(route = "first")
+        }) {
             Text(text = "뒤로 가기")
         }
     }
