@@ -17,10 +17,12 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,6 +32,7 @@ import kotlinx.coroutines.launch
 /**
  * https://www.inflearn.com/course/%EB%AA%A8%EB%8D%98-%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-%EC%BB%B4%ED%8F%AC%EC%A6%88/lecture/94903?tab=note&volume=1.00&quality=1080
  */
+@ExperimentalComposeUiApi // 실험 기능 어노테이션
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +43,7 @@ class MainActivity : ComponentActivity() {
 
             val scaffoldState = rememberScaffoldState() // 최근 상태 저장
             val scope = rememberCoroutineScope()
+            val keyboardController = LocalSoftwareKeyboardController.current
 
             Scaffold(
                 scaffoldState = scaffoldState
@@ -56,6 +60,7 @@ class MainActivity : ComponentActivity() {
                     )
 
                     Button(onClick = {
+                        keyboardController?.hide()
                         scope.launch {
                             scaffoldState.snackbarHostState.showSnackbar(message = "Hello $text")
                         }
