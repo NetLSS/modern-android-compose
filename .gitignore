@@ -13,3 +13,13 @@
 .externalNativeBuild
 .cxx
 local.properties
+06.Navigation/.idea/libraries/Gradle__org_jetbrains_kotlin_kotlin_stdlib_1_5_31.xml
+06.Navigation/.idea/libraries/Gradle__org_jetbrains_kotlin_kotlin_stdlib_common_1_5_31.xml
+06.Navigation/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_viewmodel_compose_2_4_0_aar.xml
+06.Navigation/.idea/libraries/Gradle__androidx_navigation_navigation_common_2_4_1_aar.xml
+06.Navigation/.idea/libraries/Gradle__androidx_navigation_navigation_common_ktx_2_4_1_aar.xml
+06.Navigation/.idea/libraries/Gradle__androidx_navigation_navigation_compose_2_4_1_aar.xml
+06.Navigation/.idea/libraries/Gradle__androidx_navigation_navigation_runtime_2_4_1_aar.xml
+06.Navigation/.idea/libraries/Gradle__androidx_navigation_navigation_runtime_ktx_2_4_1_aar.xml
+06.Navigation/.idea/libraries/Gradle__org_jetbrains_kotlin_kotlin_stdlib_1_6_0.xml
+06.Navigation/.idea/libraries/Gradle__org_jetbrains_kotlin_kotlin_stdlib_common_1_6_0.xml
