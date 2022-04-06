@@ -37,53 +37,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            var isFavorite by rememberSaveable {
-                mutableStateOf(false)
-            }
-            ImageCard(
-                modifier = Modifier.fillMaxWidth(0.5f)
-                    .padding(16.dp),
-                isFavorite
-            ) { favorite ->
-                isFavorite = favorite
-            }
-        }
-    }
-}
 
-@Composable
-fun ImageCard(
-    modifier: Modifier = Modifier,
-    isFavorite: Boolean,
-    onTabFavorite: (Boolean) -> Unit
-) {
-    Card(
-        modifier = modifier,
-        shape = RoundedCornerShape(8.dp),
-        elevation = 5.dp
-    ) {
-        Box(
-            modifier = Modifier.height(200.dp)
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.image),
-                contentDescription = "cover",
-                contentScale = ContentScale.Crop
-            )
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.TopEnd
-            ) {
-                IconButton(onClick = {
-                    onTabFavorite.invoke(!isFavorite)
-                }) {
-                    Icon(
-                        imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                        contentDescription = "favorite",
-                        tint = Color.White,
-                    )
-                }
-            }
         }
     }
 }
