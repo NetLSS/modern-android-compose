@@ -38,6 +38,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
 
+
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                TextField(
+                    value = "",
+                    onValueChange = {})
+                Button(onClick = {}) {
+                    Text(text = "클릭!!")
+                }
+            }
         }
     }
 }
