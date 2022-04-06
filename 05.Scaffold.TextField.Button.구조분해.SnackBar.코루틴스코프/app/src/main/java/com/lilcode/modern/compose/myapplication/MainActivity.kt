@@ -37,17 +37,21 @@ class MainActivity : ComponentActivity() {
                 mutableStateOf("")
             }
 
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                TextField(
-                    value = text,
-                    onValueChange = setValue
-                )
-                Button(onClick = {}) {
-                    Text(text = "클릭!!")
+            Scaffold {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+                    TextField(
+                        value = text,
+                        onValueChange = setValue
+                    )
+
+                    Button(onClick = {}) {
+                        Text(text = "클릭!!")
+                    }
                 }
             }
         }
