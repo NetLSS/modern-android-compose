@@ -38,10 +38,15 @@ import kotlinx.coroutines.launch
  */
 @ExperimentalComposeUiApi // 실험 기능 어노테이션
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             val navController = rememberNavController()
+
+            val scaffoldState = rememberScaffoldState()
+            val scope = rememberCoroutineScope()
 
             NavHost(navController = navController, startDestination = "first") {
                 composable(route = "first") {
@@ -51,38 +56,54 @@ class MainActivity : ComponentActivity() {
                     SecondScreen(navController = navController)
                 }
                 composable(route = "third/{value}") { backStackEntry ->
+                    Scaffold(scaffoldState = scaffoldState) {
+                        val param = backStackEntry.arguments?.getString("value") ?: ""
 
-                    ThirdScreen(
-                        navController = navController,
-                        value = backStackEntry.arguments?.getString("value") ?: ""
-                    )
+                        ThirdScreen(
+                            navController = navController,
+                            value = param
+                        )
+
+                        scope.launch {
+                            scaffoldState.snackbarHostState.showSnackbar("received: $param")
+                        }
+                    }
                 }
             }
         }
     }
+
 }
 
 // 각 화면에서 callback 을 줘서 하는 방법 도 있음 이건 TODO 해보기
 
 @Composable
 fun FirstScreen(navController: NavController) {
+
     val (value, setValue) = remember {
         mutableStateOf(value = "")
     }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         Text(text = "첫 화면")
+
         Spacer(modifier = Modifier.height(16.dp))
+
         Button(onClick = {
             navController.navigate(route = "second")
         }) {
             Text(text = "두 번째!")
         }
+
         Spacer(modifier = Modifier.height(16.dp))
+
         TextField(value = value, onValueChange = setValue)
+
         Button(onClick = {
             if (value.isEmpty()) {
                 return@Button
@@ -91,6 +112,7 @@ fun FirstScreen(navController: NavController) {
         }) {
             Text(text = "세 번째!")
         }
+
     }
 }
 
@@ -102,8 +124,11 @@ fun SecondScreen(navController: NavController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         Text(text = "두 번째 화면")
+
         Spacer(modifier = Modifier.height(16.dp))
+
         Button(onClick = {
             navController.navigateUp()
 //            navController.popBackStack()
@@ -121,9 +146,13 @@ fun ThirdScreen(navController: NavController, value: String) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         Text(text = "세 번째 화면")
+
         Spacer(modifier = Modifier.height(16.dp))
+
         Text(text = value)
+
         Button(onClick = {
             navController.popBackStack()
 //            navController.navigate(route = "first")
