@@ -45,30 +45,25 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
 
-            val scaffoldState = rememberScaffoldState()
-            val scope = rememberCoroutineScope()
-
             NavHost(navController = navController, startDestination = "first") {
+
                 composable(route = "first") {
                     FirstScreen(navController = navController)
                 }
+
                 composable(route = "second") {
                     SecondScreen(navController = navController)
                 }
+
                 composable(route = "third/{value}") { backStackEntry ->
-                    Scaffold(scaffoldState = scaffoldState) {
-                        val param = backStackEntry.arguments?.getString("value") ?: ""
+                    val param = backStackEntry.arguments?.getString("value") ?: ""
 
-                        ThirdScreen(
-                            navController = navController,
-                            value = param
-                        )
-
-                        scope.launch {
-                            scaffoldState.snackbarHostState.showSnackbar("received: $param")
-                        }
-                    }
+                    ThirdScreen(
+                        navController = navController,
+                        value = param
+                    )
                 }
+
             }
         }
     }
@@ -141,23 +136,45 @@ fun SecondScreen(navController: NavController) {
 
 @Composable
 fun ThirdScreen(navController: NavController, value: String) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+
+    val (isFirstSnackBar, setIsFirstSnackBar) = remember {
+        mutableStateOf(true)
+    }
+
+    val scaffoldState = rememberScaffoldState()
+
+    val scope = rememberCoroutineScope()
+
+    Scaffold(
+        scaffoldState = scaffoldState
     ) {
 
-        Text(text = "세 번째 화면")
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = "세 번째 화면")
 
-        Text(text = value)
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Button(onClick = {
-            navController.popBackStack()
+            Text(text = value)
+
+            Button(onClick = {
+                navController.popBackStack()
 //            navController.navigate(route = "first")
-        }) {
-            Text(text = "뒤로 가기")
+            }) {
+                Text(text = "뒤로 가기")
+            }
+
+            scope.launch {
+                if (isFirstSnackBar) {
+                    setIsFirstSnackBar(false)
+                    scaffoldState.snackbarHostState.showSnackbar(value)
+                }
+            }
         }
     }
+
 }
