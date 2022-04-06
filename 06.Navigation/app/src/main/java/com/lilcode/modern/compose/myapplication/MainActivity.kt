@@ -43,14 +43,14 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
 
             NavHost(navController = navController, startDestination = "first") {
-                composable("first") {
+                composable(route = "first") {
                     FirstScreen()
                 }
-                composable("second") {
+                composable(route = "second") {
                     SecondScreen()
                 }
-                composable("third") {
-                    ThirdScreen()
+                composable(route = "third") {
+                    ThirdScreen("")
                 }
             }
         }
@@ -59,15 +59,55 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun FirstScreen() {
-
+    val (value, setValue) = remember {
+        mutableStateOf(value = "")
+    }
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "첫 화면")
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = {}) {
+            Text(text = "두 번째!")
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        TextField(value = value, onValueChange = setValue)
+        Button(onClick = {}) {
+            Text(text = "세 번째!")
+        }
+    }
 }
 
 @Composable
 fun SecondScreen() {
 
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "두 번째 화면")
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = {}) {
+            Text(text = "뒤로 가기")
+        }
+    }
 }
 
 @Composable
-fun ThirdScreen() {
-
+fun ThirdScreen(value: String) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "세 번째 화면")
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = value)
+        Button(onClick = {}) {
+            Text(text = "뒤로 가기")
+        }
+    }
 }
