@@ -37,38 +37,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val (text, setValue) = remember {
-                mutableStateOf("")
-            }
 
-            val scaffoldState = rememberScaffoldState() // 최근 상태 저장
-            val scope = rememberCoroutineScope()
-            val keyboardController = LocalSoftwareKeyboardController.current
-
-            Scaffold(
-                scaffoldState = scaffoldState
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-
-                    TextField(
-                        value = text,
-                        onValueChange = setValue
-                    )
-
-                    Button(onClick = {
-                        keyboardController?.hide()
-                        scope.launch {
-                            scaffoldState.snackbarHostState.showSnackbar(message = "Hello $text")
-                        }
-                    }) {
-                        Text(text = "클릭!!")
-                    }
-                }
-            }
         }
     }
 }
