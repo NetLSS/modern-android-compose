@@ -37,7 +37,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
+            val textValue = remember {
+                mutableStateOf("")
+            }
 
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -45,8 +47,10 @@ class MainActivity : ComponentActivity() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TextField(
-                    value = "",
-                    onValueChange = {})
+                    value = textValue.value,
+                    onValueChange = {
+                        textValue.value = it
+                    })
                 Button(onClick = {}) {
                     Text(text = "클릭!!")
                 }
