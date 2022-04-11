@@ -63,7 +63,7 @@ class MainActivity : ComponentActivity() {
                 )
 
                 Button(onClick = {
-                    viewModel.data.value = "World"
+                    viewModel.changeValue("World")
                 }) {
                     Text(text = "변경")
                 }
@@ -76,6 +76,13 @@ class MainActivity : ComponentActivity() {
 }
 
 class MainViewModel : ViewModel() {
-    val data = mutableStateOf("Hello")
+
+    private val _data = mutableStateOf("Hello")
+
+    val data: State<String> = _data
+
+    fun changeValue(text: String) {
+        _data.value = text
+    }
 
 }
