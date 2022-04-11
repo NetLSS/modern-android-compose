@@ -3,6 +3,7 @@ package com.lilcode.modern.compose.myapplication
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -27,6 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -40,13 +42,13 @@ import kotlinx.coroutines.launch
 @ExperimentalComposeUiApi // 실험 기능 어노테이션
 class MainActivity : ComponentActivity() {
 
+    private val viewModel by viewModels<MainViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val data = remember {
-                mutableStateOf("Hello")
-            }
+
 
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -55,12 +57,12 @@ class MainActivity : ComponentActivity() {
             ) {
 
                 Text(
-                    text = data.value,
+                    text = viewModel.data.value,
                     fontSize = 30.sp
                 )
 
                 Button(onClick = {
-                    data.value = "World"
+                    viewModel.data.value = "World"
                 }) {
                     Text(text = "변경")
                 }
@@ -69,5 +71,10 @@ class MainActivity : ComponentActivity() {
 
         }
     }
+
+}
+
+class MainViewModel : ViewModel() {
+    val data = mutableStateOf("Hello")
 
 }
