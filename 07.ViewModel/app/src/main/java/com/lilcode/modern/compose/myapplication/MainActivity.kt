@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 @ExperimentalComposeUiApi // 실험 기능 어노테이션
 class MainActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<MainViewModel>()
+    private val viewModel by viewModels<MainViewModel>() // 엑티비티와 라이프사이클을 같이 함
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
