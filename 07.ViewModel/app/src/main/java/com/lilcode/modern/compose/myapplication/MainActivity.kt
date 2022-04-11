@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -42,13 +43,13 @@ import kotlinx.coroutines.launch
 @ExperimentalComposeUiApi // 실험 기능 어노테이션
 class MainActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<MainViewModel>() // 엑티비티와 라이프사이클을 같이 함
+//    private val viewModel by viewModels<MainViewModel>() // 엑티비티와 라이프사이클을 같이 함
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-
+            val viewModel = viewModel<MainViewModel>()
 
             Column(
                 modifier = Modifier.fillMaxSize(),
