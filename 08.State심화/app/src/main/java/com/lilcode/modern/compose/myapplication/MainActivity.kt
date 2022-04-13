@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -28,6 +29,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -90,6 +93,8 @@ fun HomeScreen(viewModel: MainViewModel = viewModel()) {
         mutableStateOf("Hello World")
     }
 
+    val text3: State<String> = viewModel.liveData.observeAsState("헬로우 월드")
+
     Column {
         Text(text = text2)
         Button(onClick = {
@@ -102,6 +107,14 @@ fun HomeScreen(viewModel: MainViewModel = viewModel()) {
         })
 
         Text(text = viewModel.value.value)
+
+        Text("text3")
+        Text(text3.value)
+        Button(onClick = {
+            viewModel.changeLiveData("변경 텍스트")
+        }) {
+            Text(text = "클릭")
+        }
     }
 }
 
@@ -111,5 +124,22 @@ class MainViewModel : ViewModel() {
 
     fun changeValue(value: String) {
         _value.value = value
+    }
+
+    /**
+     * LiveData 는 state 로 변환 가능.
+     *     implementation 'androidx.compose.runtime:runtime-livedata:1.1.1'  의존성 필요
+     *
+     * 추가 시 컴포즈에서 라이브 데이터 사용 가능
+     *
+     * flow 도 마찬가지로 state 변환 기능이 있음
+     *
+     * 결론 : compose 는 state 기반으로 동작을 한다. state 를 잘 알고 있어야함.
+     * */
+    private val _liveData = MutableLiveData<String>()
+    val liveData: LiveData<String> = _liveData
+
+    fun changeLiveData(value: String) {
+        _liveData.value = value
     }
 }
