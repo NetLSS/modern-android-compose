@@ -58,6 +58,13 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun HomeScreen(viewModel: MainViewModel = viewModel()) {
 
+    /**
+     * text1.value
+     *
+     * text1.value = "text"
+     *
+     * 로 접근해서 사용해야함.
+     */
     var text1: MutableState<String> = remember {
         mutableStateOf("Hello World")
     }
@@ -65,11 +72,20 @@ fun HomeScreen(viewModel: MainViewModel = viewModel()) {
 
     /**
      * import androidx.compose.runtime.getValue / setValue
+     *
+     * delegate 사용, setter, getter 활용
      */
     var text2 by remember {
         mutableStateOf("Hello World")
     }
 
+    /**
+     * text
+     *
+     * setText("Text")
+     *
+     * 로 사용
+     */
     val (text: String, setText: (String) -> Unit) = remember {
         mutableStateOf("Hello World")
     }
