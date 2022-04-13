@@ -49,40 +49,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val viewModel = viewModel<MainViewModel>()
-
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                Text(
-                    text = viewModel.data.value,
-                    fontSize = 30.sp
-                )
-
-                Button(onClick = {
-                    viewModel.changeValue("World")
-                }) {
-                    Text(text = "변경")
-                }
-
-            }
 
         }
-    }
-
-}
-
-class MainViewModel : ViewModel() {
-
-    private val _data = mutableStateOf("Hello")
-
-    val data: State<String> = _data
-
-    fun changeValue(text: String) {
-        _data.value = text
     }
 
 }
