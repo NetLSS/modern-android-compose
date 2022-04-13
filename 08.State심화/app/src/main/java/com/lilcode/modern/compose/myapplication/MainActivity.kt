@@ -62,16 +62,26 @@ fun HomeScreen(viewModel: MainViewModel = viewModel()) {
         mutableStateOf("Hello World")
     }
 
-    var (text: String, setText: (String) -> Unit) = remember {
+
+    /**
+     * import androidx.compose.runtime.getValue / setValue
+     */
+    var text2 by remember {
+        mutableStateOf("Hello World")
+    }
+
+    val (text: String, setText: (String) -> Unit) = remember {
         mutableStateOf("Hello World")
     }
 
     Column {
-        Text(text = text)
+        Text(text = text2)
         Button(onClick = {}) {
             Text(text = "클릭")
         }
-        TextField(value = text, onValueChange = setText)
+        TextField(value = text2, onValueChange = {
+            text2 = it
+        })
     }
 }
 
