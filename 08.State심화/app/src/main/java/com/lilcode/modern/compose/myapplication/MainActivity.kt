@@ -49,8 +49,33 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-
+            HomeScreen()
         }
     }
 
+}
+
+@Composable
+fun HomeScreen(viewModel: MainViewModel = viewModel()) {
+
+    var text1: MutableState<String> = remember {
+        mutableStateOf("Hello World")
+    }
+
+    var (text: String, setText: (String) -> Unit) = remember {
+        mutableStateOf("Hello World")
+    }
+
+    Column {
+        Text(text = text)
+        Button(onClick = {}) {
+            Text(text = "클릭")
+        }
+        TextField(value = text, onValueChange = setText)
+    }
+}
+
+class MainViewModel : ViewModel() {
+    private val _value: MutableState<String> = mutableStateOf("Hello World")
+    val value: State<String> = _value
 }
