@@ -59,6 +59,13 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun HomeScreen() {
+    val (height, setHeight) = rememberSaveable {
+        mutableStateOf("")
+    }
+    val (weight, setWeight) = rememberSaveable {
+        mutableStateOf("")
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -70,15 +77,15 @@ fun HomeScreen() {
             modifier = Modifier.padding(16.dp)
         ) {
             OutlinedTextField(
-                value = "",
-                onValueChange = {},
+                value = height,
+                onValueChange = setHeight,
                 label = { Text("키") },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
             OutlinedTextField(
-                value = "",
-                onValueChange = {},
+                value = weight,
+                onValueChange = setWeight,
                 label = { Text("몸무게") },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
