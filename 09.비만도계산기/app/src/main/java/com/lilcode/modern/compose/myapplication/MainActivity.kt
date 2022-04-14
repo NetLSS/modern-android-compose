@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -26,6 +27,7 @@ import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,7 +51,46 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
+            HomeScreen()
         }
     }
 
+}
+
+@Composable
+fun HomeScreen() {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("비만도 계산기") }
+            )
+        }
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            OutlinedTextField(
+                value = "",
+                onValueChange = {},
+                label = { Text("키") },
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
+            OutlinedTextField(
+                value = "",
+                onValueChange = {},
+                label = { Text("몸무게") },
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Button(
+                onClick = {},
+                modifier = Modifier.align(Alignment.End)
+            ) {
+                Text("결과")
+            }
+        }
+
+    }
 }
