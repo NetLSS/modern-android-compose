@@ -1,4 +1,3 @@
-# 2022-04-06
 
 ```kt
 package com.lilcode.modern.compose.myapplication
@@ -6,6 +5,7 @@ package com.lilcode.modern.compose.myapplication
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -29,6 +29,9 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -42,142 +45,46 @@ import kotlinx.coroutines.launch
 @ExperimentalComposeUiApi // 실험 기능 어노테이션
 class MainActivity : ComponentActivity() {
 
+//    private val viewModel by viewModels<MainViewModel>() // 엑티비티와 라이프사이클을 같이 함
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val navController = rememberNavController()
+            val viewModel = viewModel<MainViewModel>()
 
-            NavHost(navController = navController, startDestination = "first") {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
 
-                composable(route = "first") {
-                    FirstScreen(navController = navController)
-                }
+                Text(
+                    text = viewModel.data.value,
+                    fontSize = 30.sp
+                )
 
-                composable(route = "second") {
-                    SecondScreen(navController = navController)
-                }
-
-                composable(route = "third/{value}") { backStackEntry ->
-                    val param = backStackEntry.arguments?.getString("value") ?: ""
-
-                    ThirdScreen(
-                        navController = navController,
-                        value = param
-                    )
+                Button(onClick = {
+                    viewModel.changeValue("World")
+                }) {
+                    Text(text = "변경")
                 }
 
             }
+
         }
     }
 
 }
 
-// 각 화면에서 callback 을 줘서 하는 방법 도 있음 이건 TODO 해보기
+class MainViewModel : ViewModel() {
 
-@Composable
-fun FirstScreen(navController: NavController) {
+    private val _data = mutableStateOf("Hello")
 
-    val (value, setValue) = remember {
-        mutableStateOf(value = "")
-    }
+    val data: State<String> = _data
 
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        Text(text = "첫 화면")
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(onClick = {
-            navController.navigate(route = "second")
-        }) {
-            Text(text = "두 번째!")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        TextField(value = value, onValueChange = setValue)
-
-        Button(onClick = {
-            if (value.isEmpty()) {
-                return@Button
-            }
-            navController.navigate(route = "third/$value")
-        }) {
-            Text(text = "세 번째!")
-        }
-
-    }
-}
-
-@Composable
-fun SecondScreen(navController: NavController) {
-
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        Text(text = "두 번째 화면")
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(onClick = {
-            navController.navigateUp()
-//            navController.popBackStack()
-//            navController.navigate(route = "first")
-        }) {
-            Text(text = "뒤로 가기")
-        }
-    }
-}
-
-@Composable
-fun ThirdScreen(navController: NavController, value: String) {
-
-    val (isFirstSnackBar, setIsFirstSnackBar) = remember {
-        mutableStateOf(true)
-    }
-
-    val scaffoldState = rememberScaffoldState()
-
-    val scope = rememberCoroutineScope()
-
-    Scaffold(
-        scaffoldState = scaffoldState
-    ) {
-
-
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = "세 번째 화면")
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(text = value)
-
-            Button(onClick = {
-                navController.popBackStack()
-//            navController.navigate(route = "first")
-            }) {
-                Text(text = "뒤로 가기")
-            }
-
-            scope.launch {
-                if (isFirstSnackBar) {
-                    setIsFirstSnackBar(false)
-                    scaffoldState.snackbarHostState.showSnackbar(value)
-                }
-            }
-        }
+    fun changeValue(text: String) {
+        _data.value = text
     }
 
 }
