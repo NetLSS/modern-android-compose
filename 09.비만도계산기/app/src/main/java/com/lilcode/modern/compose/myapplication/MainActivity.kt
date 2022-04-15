@@ -4,16 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.*
@@ -48,18 +46,34 @@ import kotlinx.coroutines.launch
  */
 class MainActivity : ComponentActivity() {
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            HomeScreen()
+            val navController = rememberNavController()
+
+            NavHost(
+                navController = navController,
+                startDestination = "home"
+            ) {
+                composable(route = "home") {
+                    HomeScreen(navController)
+                }
+                composable(route = "result") {
+                    ResultScreen(bmi = 35.0, navController = navController)
+                }
+
+            }
+
+
         }
     }
 
 }
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) {
     val (height, setHeight) = rememberSaveable {
         mutableStateOf("")
     }
@@ -93,7 +107,9 @@ fun HomeScreen() {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Button(
-                onClick = {},
+                onClick = {
+                    navController.navigate("result")
+                },
                 modifier = Modifier.align(Alignment.End)
             ) {
                 Text("결과")
@@ -104,11 +120,20 @@ fun HomeScreen() {
 }
 
 @Composable
-fun ResultScreen(bmi: Double) {
+fun ResultScreen(navController: NavController, bmi: Double) {
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("비만도 계산기")})
+            TopAppBar(title = { Text("비만도 계산기") },
+                navigationIcon = {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "home",
+                        modifier = Modifier.clickable {
+                            navController.popBackStack()
+                        }
+                    )
+                })
         }
     ) {
         Column(
@@ -129,10 +154,4 @@ fun ResultScreen(bmi: Double) {
         }
     }
 
-}
-
-@Composable
-@Preview
-fun Preview() {
-    ResultScreen(bmi = 44.8)
 }
