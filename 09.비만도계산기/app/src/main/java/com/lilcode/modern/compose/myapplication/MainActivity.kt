@@ -3,43 +3,27 @@ package com.lilcode.modern.compose.myapplication
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Blue
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.lilcode.modern.compose.myapplication.ui.theme.MyApplicationTheme
-import kotlinx.coroutines.launch
 import kotlin.math.pow
 
 /**
@@ -68,7 +52,9 @@ class MainActivity : ComponentActivity() {
                     }
                 }
                 composable(route = "result") {
-                    ResultScreen(bmi = bmi, navController = navController)
+                    ResultScreen(bmi = bmi) {
+                        navController.popBackStack()
+                    }
                 }
             }
         }
@@ -128,7 +114,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun ResultScreen(navController: NavController, bmi: Double) {
+fun ResultScreen(bmi: Double, onBackButtonClicked: () -> Unit) {
 
     val text = when {
         bmi >= 35 -> "고도 비만"
@@ -154,7 +140,7 @@ fun ResultScreen(navController: NavController, bmi: Double) {
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "home",
                         modifier = Modifier.clickable {
-                            navController.popBackStack()
+                            onBackButtonClicked()
                         }
                     )
                 })
