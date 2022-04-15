@@ -3,13 +3,16 @@ package com.lilcode.modern.compose.myapplication
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -36,24 +40,22 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
+            val navHostController = rememberNavController()
             val viewModel = viewModel<BmiViewModel>()
-            val navController = rememberNavController()
-
-            val bmi = viewModel.bmi.value
 
             NavHost(
-                navController = navController,
+                navController = navHostController,
                 startDestination = "home"
             ) {
                 composable(route = "home") {
-                    HomeScreen() { height, weight ->
+                    HomeScreen { height, weight ->
                         viewModel.bmiCalculate(height, weight)
-                        navController.navigate("result")
+                        viewModel.navToResult(navHostController)
                     }
                 }
                 composable(route = "result") {
-                    ResultScreen(bmi = bmi) {
-                        navController.popBackStack()
+                    ResultScreen(bmi = viewModel.bmi.value) {
+                        viewModel.navPopBackStack(navHostController)
                     }
                 }
             }
@@ -166,7 +168,7 @@ fun ResultScreen(bmi: Double, onBackButtonClicked: () -> Unit) {
 
 }
 
-class BmiViewModel : ViewModel() {
+class BmiViewModel() : ViewModel() {
     private val _bmi = mutableStateOf<Double>(0.0)
     val bmi: State<Double> = _bmi
 
@@ -175,5 +177,13 @@ class BmiViewModel : ViewModel() {
         weight: Double
     ) {
         _bmi.value = weight / (height / 100.0).pow(2.0)
+    }
+
+    fun navPopBackStack(navHostController: NavHostController) {
+        navHostController.popBackStack()
+    }
+
+    fun navToResult(navHostController: NavHostController) {
+        navHostController.navigate("result")
     }
 }
