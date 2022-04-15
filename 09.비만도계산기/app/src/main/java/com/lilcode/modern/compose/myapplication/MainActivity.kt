@@ -49,8 +49,7 @@ class MainActivity : ComponentActivity() {
             ) {
                 composable(route = "home") {
                     HomeScreen { height, weight ->
-                        viewModel.bmiCalculate(height, weight)
-                        viewModel.navToResult(navHostController)
+                        viewModel.onHomeScreenBackButtonClick(height, weight, navHostController)
                     }
                 }
                 composable(route = "result") {
@@ -168,11 +167,11 @@ fun ResultScreen(bmi: Double, onBackButtonClicked: () -> Unit) {
 
 }
 
-class BmiViewModel() : ViewModel() {
+class BmiViewModel : ViewModel() {
     private val _bmi = mutableStateOf<Double>(0.0)
     val bmi: State<Double> = _bmi
 
-    fun bmiCalculate(
+    private fun bmiCalculate(
         height: Double,
         weight: Double
     ) {
@@ -183,7 +182,16 @@ class BmiViewModel() : ViewModel() {
         navHostController.popBackStack()
     }
 
-    fun navToResult(navHostController: NavHostController) {
+    private fun navToResult(navHostController: NavHostController) {
         navHostController.navigate("result")
+    }
+
+    fun onHomeScreenBackButtonClick(
+        height: Double,
+        weight: Double,
+        navHostController: NavHostController
+    ) {
+        bmiCalculate(height, weight)
+        navToResult(navHostController)
     }
 }
