@@ -6,7 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -20,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
@@ -98,4 +101,95 @@ class MainViewModel : ViewModel() {
     fun recordLabTime() {
         _lapTimes.value.add(0, "${lap++} LAP : ${sec.value}.${milli.value}")
     }
+}
+
+@Composable
+fun MainScreen(
+    sec: Int,
+    milli: Int,
+    isRunning: Boolean,
+    labTimes: List<String>,
+    onReset: () -> Unit,
+    onToggle: (Boolean) -> Unit,
+    onLapTime: () -> Unit
+) {
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text("StopWatch") })
+        }
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(40.dp))
+
+            Row(
+                verticalAlignment = Alignment.Bottom
+            ) {
+                Text("$sec", fontSize = 100.sp)
+                Text("$milli")
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Column(
+                modifier = Modifier.weight(1f) // 나머지 영역 차지
+                    .verticalScroll(rememberScrollState())
+            ) {
+                labTimes.forEach { labTime ->
+                    Text(labTime)
+                }
+            }
+
+            Row(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                FloatingActionButton(
+                    onClick = { onReset() }, backgroundColor = Color.Red
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_baseline_refresh_24),
+                        contentDescription = "reset"
+                    )
+                }
+
+                FloatingActionButton(
+                    onClick = { onToggle(isRunning) }, backgroundColor = Color.Green
+                ) {
+                    Image(
+                        painter = painterResource(
+                            id =
+                            if (isRunning) R.drawable.ic_baseline_pause_24
+                            else R.drawable.ic_baseline_play_arrow_24
+                        ),
+                        contentDescription = "start/pause"
+                    )
+                }
+
+                Button(onClick = { onLapTime() }) {
+                    Text("랩 타임")
+                }
+            }
+        }
+
+    }
+}
+
+@Preview
+@Composable
+fun preview() {
+    MainScreen(
+        sec = 10,
+        milli = 1,
+        isRunning = false,
+        labTimes = (1..50).map { "$it" },
+        onReset = {},
+        onToggle = {},
+        onLapTime = {}
+    )
 }
