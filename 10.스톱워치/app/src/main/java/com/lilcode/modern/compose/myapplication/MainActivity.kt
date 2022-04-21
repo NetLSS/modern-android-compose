@@ -3,6 +3,7 @@ package com.lilcode.modern.compose.myapplication
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.contextaware.withContextAvailable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,10 +13,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,12 +40,32 @@ import kotlin.math.pow
  */
 class MainActivity : ComponentActivity() {
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
+            val viewModel = viewModel<MainViewModel>()
 
+            val sec = viewModel.sec.value
+            val milli = viewModel.milli.value
+            val isRunning = viewModel.isRunning.value
+            val labTimes = viewModel.lapTimes
+
+            MainScreen(
+                sec = sec,
+                milli = milli,
+                isRunning = isRunning,
+                labTimes = labTimes,
+                onReset = { viewModel.reset() },
+                onLapTime = { viewModel.recordLabTime() },
+                onToggle = { running ->
+                    if (running) {
+                        viewModel.pause()
+                    } else {
+                        viewModel.start()
+                    }
+                }
+            )
         }
     }
 
@@ -61,8 +81,11 @@ class MainViewModel : ViewModel() {
     private val _milli = mutableStateOf(0)
     val milli: State<Int> = _milli
 
-    private val _lapTimes = mutableStateOf(mutableListOf<String>())
-    val lapTimes: State<List<String>> = _lapTimes
+//    private val _lapTimes = mutableStateOf(mutableListOf<String>())
+//    val lapTimes: State<List<String>> = _lapTimes
+
+    private val _lapTimes = mutableStateListOf<String>()
+    val lapTimes: List<String> = _lapTimes
 
     // start 유무 상태
     private val _isRunning = mutableStateOf(false)
@@ -73,7 +96,6 @@ class MainViewModel : ViewModel() {
 
     fun start() {
         _isRunning.value = true
-
         timerTask = timer(period = 10) {
             time++
             _sec.value = time / 100
@@ -94,12 +116,12 @@ class MainViewModel : ViewModel() {
         _sec.value = 0
         _milli.value = 0
 
-        _lapTimes.value.clear()
+        _lapTimes.clear()
         lap = 1
     }
 
     fun recordLabTime() {
-        _lapTimes.value.add(0, "${lap++} LAP : ${sec.value}.${milli.value}")
+        _lapTimes.add(0, "${lap++} LAP : ${sec.value}.${milli.value}")
     }
 }
 
