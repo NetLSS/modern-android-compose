@@ -28,6 +28,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import java.util.*
+import kotlin.concurrent.timer
 import kotlin.math.pow
 
 /**
@@ -44,4 +46,56 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+}
+
+class MainViewModel : ViewModel() {
+    private var time = 0
+    private var timerTask: Timer? = null
+
+    private val _sec = mutableStateOf(0)
+    val sec: State<Int> = _sec
+
+    private val _milli = mutableStateOf(0)
+    val milli: State<Int> = _milli
+
+    private val _lapTimes = mutableStateOf(mutableListOf<String>())
+    val lapTimes: State<List<String>> = _lapTimes
+
+    // start 유무 상태
+    private val _isRunning = mutableStateOf(false)
+    val isRunning: State<Boolean> = _isRunning
+
+    // Lap time 화면에 보일 필요 없어서 일반 멤버로 선언
+    private var lap = 1
+
+    fun start() {
+        _isRunning.value = true
+
+        timerTask = timer(period = 10) {
+            time++
+            _sec.value = time / 100
+            _milli.value = time % 100
+        }
+    }
+
+    fun pause() {
+        _isRunning.value = false
+        timerTask?.cancel()
+    }
+
+    fun reset() {
+        _isRunning.value = false
+        timerTask?.cancel()
+
+        time = 0
+        _sec.value = 0
+        _milli.value = 0
+
+        _lapTimes.value.clear()
+        lap = 1
+    }
+
+    fun recordLabTime() {
+        _lapTimes.value.add(0, "${lap++} LAP : ${sec.value}.${milli.value}")
+    }
 }
