@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val navHostController = rememberNavController()
+            val navHostController = rememberNavController() // 이것의 적절한 위치는 어디가 맞는가
             val viewModel = viewModel<BmiViewModel>()
 
             NavHost(
