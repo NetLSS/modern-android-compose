@@ -1,7 +1,9 @@
 package com.lilcode.modern.compose.myapplication
 
 import android.os.Bundle
+import android.webkit.WebChromeClient
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.contextaware.withContextAvailable
@@ -111,6 +113,8 @@ fun MyWebView() {
         modifier = Modifier.fillMaxSize(),
         factory = {
             WebView(it).apply {
+                settings.javaScriptEnabled = true
+                webViewClient = WebViewClient()
                 loadUrl("https://google.com")
             }
         }, update = {
