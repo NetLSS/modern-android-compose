@@ -134,6 +134,8 @@ fun MyWebView(viewModel: MainViewModel, scaffoldState: ScaffoldState) {
     /*
     key에 전달죄는 객체가 변경 되었을 떄 block 실행
     Unit 한번 만 실행
+
+    key1 에 (컴포저블 수명주기 동이랗게 하고싶다면) true  나 Unit 같은 상수 지정하면 1번만 실행
      */
     LaunchedEffect(key1 = Unit) {
         viewModel.undoSharedFlow.collectLatest {
