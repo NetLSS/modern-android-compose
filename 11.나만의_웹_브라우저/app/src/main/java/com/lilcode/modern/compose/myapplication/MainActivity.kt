@@ -104,13 +104,13 @@ fun HomeScreen(viewModel: MainViewModel) {
                 .fillMaxSize()
         ) {
             OutlinedTextField(
-                value = inputUrl,
-                onValueChange = setUrl,
+                value = viewModel.addressText.value,
+                onValueChange = viewModel::setAddressText,
                 label = { Text("https://") },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 keyboardActions = KeyboardActions(onSearch = {
-                    viewModel.url.value = inputUrl
+                    viewModel.url.value = viewModel.addressText.value
                     focusManager.clearFocus()
                 })
             )
